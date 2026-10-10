@@ -1,0 +1,263 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>法拉第 AI 教師</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 左欄「實驗室筆記」人物檔案（照片、年表、成就），右欄與法拉第對話的探究教室；手機時上下堆疊 */
+:root{
+  --paper:#eef1ef; --sheet:#f8faf8; --ink:#1d2a33; --muted:#5a6a72; --rule:#c9d3d1;
+  --copper:#b05a2a; --copper-soft:#f1dccd; --field:#2f5d73; --me:#e3ecef;
+  --serif:"Noto Serif TC","Songti TC",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#11181d; --sheet:#172128; --ink:#e4ebec; --muted:#97a6ad; --rule:#2b3a43;
+  --copper:#e08a55; --copper-soft:#3a2619; --field:#7fb3cb; --me:#1f3340; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11181d; --sheet:#172128; --ink:#e4ebec; --muted:#97a6ad; --rule:#2b3a43;
+  --copper:#e08a55; --copper-soft:#3a2619; --field:#7fb3cb; --me:#1f3340; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 40px}
+header.top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:24px}
+header.top h1{font-family:var(--serif);font-weight:900;font-size:clamp(1.6rem,3.6vw,2.3rem);margin:0;letter-spacing:.04em;text-wrap:balance}
+header.top h1 small{font-family:var(--mono);font-weight:400;font-size:.45em;color:var(--muted);letter-spacing:.08em;margin-left:.6em}
+.ri{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+/* profile */
+.profile{display:flex;flex-direction:column;gap:22px;min-width:0}
+.portrait{position:relative;background:var(--sheet);border:1px solid var(--rule);padding:14px;display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:start}
+.portrait canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.5}
+.portrait figure{margin:0;position:relative}
+.portrait img{display:block;width:150px;max-width:100%;height:auto;border:1px solid var(--rule)}
+.portrait figcaption{font-size:11px;color:var(--muted);line-height:1.4;margin-top:6px}
+.idcard{position:relative;min-width:0}
+.idcard h2{font-family:var(--serif);font-size:1.5rem;margin:0;line-height:1.25}
+.idcard .en{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:10px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;margin:0;font-size:13px}
+.facts dt{color:var(--muted)} .facts dd{margin:0}
+@media (max-width:420px){.portrait{grid-template-columns:minmax(0,1fr)}.portrait img{width:100%}}
+h3.sec{font-family:var(--serif);font-size:1.05rem;margin:0 0 10px;display:flex;align-items:baseline;gap:10px}
+h3.sec span{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--copper);letter-spacing:.08em}
+.timeline{list-style:none;margin:0;padding:0;border-left:2px solid var(--rule)}
+.timeline li{position:relative;padding:0 0 12px 18px;font-size:13.5px;line-height:1.55}
+.timeline li::before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--sheet);border:2px solid var(--copper)}
+.timeline b{font-family:var(--mono);font-weight:500;color:var(--copper);margin-right:6px;font-variant-numeric:tabular-nums}
+.legacy{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.legacy div{background:var(--sheet);border:1px solid var(--rule);padding:10px 12px}
+.legacy .v{font-family:var(--mono);font-size:15px;color:var(--field);font-weight:500}
+.legacy .k{font-size:12.5px;color:var(--muted);line-height:1.45}
+blockquote{margin:0;padding:12px 16px;border-left:3px solid var(--copper);background:var(--copper-soft);font-family:var(--serif);font-size:15px;line-height:1.7}
+blockquote cite{display:block;font-family:var(--sans);font-style:normal;font-size:12px;color:var(--muted);margin-top:4px}
+/* chat */
+.lab{background:var(--sheet);border:1px solid var(--rule);display:flex;flex-direction:column;min-width:0;height:min(820px,calc(100vh - 60px));min-height:560px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}
+@media (max-width:860px){.lab{position:static;height:auto;min-height:0}}
+.lab-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--rule)}
+.lab-head .who{display:flex;align-items:center;gap:10px;min-width:0}
+.lab-head img{width:38px;height:38px;border-radius:50%;object-fit:cover;object-position:50% 12%;border:1px solid var(--rule)}
+.lab-head strong{font-family:var(--serif);font-size:1.05rem;display:block;line-height:1.2}
+.status{font-size:12px;color:var(--muted)}
+.status i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:5px;vertical-align:1px}
+.status.on i{background:#3d9a61}
+.modes{display:flex;border:1px solid var(--rule)}
+.modes button{font:inherit;font-size:13px;border:0;background:transparent;color:var(--muted);padding:5px 12px;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+.log{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:14px;min-height:280px}
+@media (max-width:860px){.log{max-height:60vh}}
+.msg{max-width:88%;padding:10px 14px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.f{align-self:flex-start;border-left:3px solid var(--copper);background:var(--paper)}
+.msg.u{align-self:flex-end;background:var(--me)}
+.msg .para{display:block;font-family:var(--mono);font-size:11px;color:var(--copper);letter-spacing:.05em;margin-bottom:2px}
+.msg.thinking{color:var(--muted);font-style:italic}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 12px}
+.chips button{font:inherit;font-size:13px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);padding:5px 11px;cursor:pointer;text-align:left}
+.chips button:hover{border-color:var(--copper);color:var(--copper)}
+form.ask{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--rule)}
+form.ask textarea{flex:1;min-width:0;font:inherit;resize:none;border:1px solid var(--rule);background:var(--paper);color:var(--ink);padding:9px 11px;height:46px}
+form.ask button{font:inherit;font-weight:700;background:var(--copper);color:#fff;border:0;padding:0 18px;cursor:pointer}
+form.ask button:disabled{opacity:.5;cursor:default}
+.note{font-size:12px;color:var(--muted);padding:0 16px 12px}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--field);outline-offset:2px}
+footer{margin-top:28px;font-size:12px;color:var(--muted);border-top:1px solid var(--rule);padding-top:10px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+</head><body><div class="wrap">
+  <header class="top">
+    <h1>法拉第 AI 教師<small>EXPERIMENTAL RESEARCHES</small></h1>
+    <div class="ri">Royal Institution · London · 1791–1867</div>
+  </header>
+
+  <div class="grid">
+    <section class="profile" aria-label="科學家資料">
+      <div class="portrait">
+        <canvas id="field" aria-hidden="true"></canvas>
+        <figure>
+          <img id="photo" alt="麥可·法拉第肖像，Thomas Phillips 油畫，1842 年" src="https://commons.wikimedia.org/wiki/Special:FilePath/M_Faraday_Th_Phillips_oil_1842.jpg?width=330">
+          <figcaption>Thomas Phillips 繪，1842<br>英國國家肖像館（公有領域）</figcaption>
+        </figure>
+        <div class="idcard">
+          <h2>麥可·法拉第</h2>
+          <div class="en">Michael Faraday</div>
+          <dl class="facts">
+            <dt>出生</dt><dd>1791.09.22 倫敦紐因頓</dd>
+            <dt>逝世</dt><dd>1867.08.25 漢普頓宮</dd>
+            <dt>領域</dt><dd>電磁學、電化學</dd>
+            <dt>學歷</dt><dd>僅受基礎教育，裝訂學徒自學</dd>
+            <dt>機構</dt><dd>英國皇家研究院</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="sec">生平年表<span>CHRONOLOGY</span></h3>
+        <ol class="timeline">
+          <li><b>1805</b>14 歲到書籍裝訂店當學徒，邊裝訂邊讀書，自學電學與化學。</li>
+          <li><b>1813</b>旁聽戴維（Humphry Davy）演講並寄上筆記，獲聘為皇家研究院實驗助理。</li>
+          <li><b>1821</b>做出「電磁旋轉」裝置，是電動機原理的雛形。</li>
+          <li><b>1825</b>從鯨油氣中分離出苯；同年開辦皇家研究院聖誕講座。</li>
+          <li><b>1831</b>8 月 29 日以鐵環線圈發現電磁感應，奠定發電機與變壓器原理。</li>
+          <li><b>1833</b>提出電解定律，並與惠威爾創造「電極、陽極、陰極、離子」等名詞。</li>
+          <li><b>1836</b>以金屬網房間實驗說明靜電屏蔽，即今日的「法拉第籠」。</li>
+          <li><b>1845</b>發現磁場使偏振光旋轉（法拉第效應）與抗磁性，提出「場」的觀念。</li>
+          <li><b>1860</b>聖誕講座《蠟燭的化學史》，至今仍是科普經典。</li>
+        </ol>
+      </div>
+
+      <div>
+        <h3 class="sec">留下的名字<span>LEGACY</span></h3>
+        <div class="legacy">
+          <div><div class="v">F（法拉）</div><div class="k">電容的 SI 單位</div></div>
+          <div><div class="v">96485 C/mol</div><div class="k">法拉第常數，1 莫耳電子的電量</div></div>
+          <div><div class="v">ε = −dΦ/dt</div><div class="k">法拉第電磁感應定律</div></div>
+          <div><div class="v">¶ 1–3362</div><div class="k">《電學實驗研究》以編號段落記錄實驗</div></div>
+        </div>
+      </div>
+
+      <blockquote>「沒有什麼事情美好到不可能是真的，只要它符合自然定律。」<cite>法拉第實驗日記，1849（中譯）</cite></blockquote>
+    </section>
+
+    <section class="lab" aria-label="與法拉第對話">
+      <div class="lab-head">
+        <div class="who">
+          <img id="avatar" alt="">
+          <div><strong>法拉第老師</strong><span class="status" id="status"><i></i>連線中…</span></div>
+        </div>
+        <div class="modes" role="group" aria-label="教學模式">
+          <button type="button" id="m-inquiry" aria-pressed="true">探究引導</button>
+          <button type="button" id="m-story" aria-pressed="false">聽他說故事</button>
+        </div>
+      </div>
+      <div class="log" id="log" aria-live="polite"></div>
+      <div class="chips" id="chips"></div>
+      <form class="ask" id="ask">
+        <label for="q" class="sr" hidden>你的問題</label>
+        <textarea id="q" placeholder="問法拉第老師一個問題…（Enter 送出，Shift+Enter 換行）"></textarea>
+        <button type="submit" id="send">送出</button>
+      </form>
+      <div class="note" id="note">AI 扮演的法拉第，內容供學習參考；重要史實請再查證。</div>
+    </section>
+  </div>
+
+  <footer>肖像：Thomas Phillips《Michael Faraday》(1842)，National Portrait Gallery, London，經 Wikimedia Commons，公有領域。</footer>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  $('avatar').src=$('photo').src;
+
+  /* 鐵粉磁力線背景 */
+  function drawField(){
+    const c=$('field'),r=c.getBoundingClientRect(),d=devicePixelRatio||1;
+    c.width=r.width*d;c.height=r.height*d;const x=c.getContext('2d');x.scale(d,d);
+    const col=getComputedStyle(document.documentElement).getPropertyValue('--field').trim();
+    x.strokeStyle=col;x.lineWidth=.6;
+    const p1={x:r.width*.62,y:r.height*.5},p2={x:r.width*.92,y:r.height*.5};
+    for(let k=0;k<26;k++){
+      const a=(k/26)*Math.PI*2;let px=p1.x+6*Math.cos(a),py=p1.y+6*Math.sin(a);
+      x.beginPath();x.moveTo(px,py);
+      for(let s=0;s<500;s++){
+        const d1x=px-p1.x,d1y=py-p1.y,d2x=px-p2.x,d2y=py-p2.y;
+        const r1=Math.pow(d1x*d1x+d1y*d1y,1.5)+1,r2=Math.pow(d2x*d2x+d2y*d2y,1.5)+1;
+        let fx=d1x/r1-d2x/r2,fy=d1y/r1-d2y/r2;const m=Math.hypot(fx,fy)||1;
+        px+=fx/m*2;py+=fy/m*2;x.lineTo(px,py);
+        if(Math.hypot(px-p2.x,py-p2.y)<5||px<0||py<0||px>r.width||py>r.height)break;
+      }
+      x.stroke();
+    }
+  }
+  try{drawField();addEventListener('resize',drawField);
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change',drawField);}catch(e){}
+
+  const PERSONA=`你是麥可·法拉第（Michael Faraday, 1791–1867），英國皇家研究院的實驗物理與化學家，現在擔任台灣高中生的「AI 物理老師」。
+規則：
+- 一律以繁體中文（台灣用語）回答，用第一人稱、溫和謙遜、熱愛實驗的語氣說話；可提到自己的經歷（裝訂學徒、戴維、皇家研究院、聖誕講座、1831 年的電磁感應實驗、蠟燭）。
+- 你只知道 1867 年以前的事。學生問到之後的科技（手機、發電廠、電動車），可以說「在我那個年代還沒有，但聽你描述，它應該用到了……的原理」，再連回物理概念。
+- 數學適合高中程度；可用 ε = −dΦ/dt、Φ = BA cosθ 等式子，但重點放在現象與直覺。
+- 每次回答控制在 150–250 字，不要用 Markdown 標題或表格。
+- 回答不確定的史實時要誠實說明。
+{MODE}`;
+  const MODES={
+    inquiry:`教學模式：探究引導。不要直接給完整答案。先回應學生的想法，再提出一個能在家或實驗室做的小實驗或思考問題，引導他預測、觀察、解釋。最後以一個問句結尾，請學生回覆他的預測或觀察。`,
+    story:`教學模式：說故事。以法拉第親身經歷的口吻講述相關故事與實驗細節，生動具體，最後用一句話點出背後的物理概念。`
+  };
+  const STARTERS=['磁鐵穿過線圈為什麼會產生電流？','你沒上過大學，是怎麼成為科學家的？','什麼是「法拉第籠」？為什麼電梯裡手機收訊會變差？','你說的「力線」和現在課本的磁場有什麼關係？','一根蠟燭裡有哪些科學？'];
+  const OFFLINE={
+    0:'孩子，1831 年那個夏天，我把兩組線圈繞在一個鐵環上。接通電池的那一瞬間，另一邊的檢流計指針跳了一下，然後就靜止了；斷電時，又反方向跳一下。\n\n關鍵在「變化」。磁鐵靜靜躺在線圈裡，什麼也不會發生；只有穿過線圈的磁力線數目在改變時，才會推動電荷流動。今天你們寫成 ε = −dΦ/dt。\n\n你來試試看：如果磁鐵插入得更快，你預測指針會怎麼樣？',
+    1:'我的父親是鐵匠，家裡不寬裕，我只上過幾年學。十四歲時到李博先生的書店當裝訂學徒，裝訂到《大英百科全書》的電學條目，就一邊裝訂一邊讀，晚上用省下的錢買材料做實驗。\n\n後來有位顧客送我戴維爵士的演講門票。我把筆記整理裝訂好寄給他，他隔年就讓我當助理。\n\n我想告訴你：好奇心加上把觀察寫下來的習慣，比文憑更重要。你最近對什麼現象感到好奇？',
+    2:'1836 年，我在皇家研究院做了一個邊長約十二英尺的房間，外面包上金屬網和錫箔，讓外面充滿強烈的靜電。我帶著靈敏的驗電器走進去，結果一點反應也沒有。\n\n電荷只會停留在導體的外表面，裡面的電場互相抵銷。電梯的金屬廂像一個不完整的籠子，會擋掉一部分電磁波，所以手機收訊變差。\n\n想一想：用鋁箔把手機包起來再打電話給它，你預測會發生什麼？',
+    3:'我數學不好，所以習慣用眼睛「看」力。把鐵粉撒在磁鐵上方的紙上，輕敲一下，鐵粉就排成一條條曲線，我稱它們為「力線」。\n\n我相信力不是隔空瞬間作用，而是充滿在空間中的某種狀態。後來馬克士威用數學把我的想法寫成方程式，這就是你們課本裡的「磁場」。力線越密，磁場越強。\n\n你能預測兩個同極相對的磁鐵之間，鐵粉會排成什麼樣子嗎？',
+    4:'1860 年聖誕節，我對一群孩子講了六堂蠟燭的課。點燃蠟燭後，你會看到燭芯頂端凹下去形成一個小杯子，裡面盛著熔化的蠟，那是因為上升的熱空氣把邊緣冷卻了。\n\n液態的蠟沿燭芯上升（毛細作用），再被加熱成氣體才真正燃燒。火焰明亮的部分其實是發熱的碳微粒。\n\n回家試試：吹熄蠟燭後立刻把火柴靠近那縷白煙，你猜火焰會不會「跳回」燭芯？'
+  };
+
+  let mode='inquiry',history=[],busy=false,sample=null,ready=false;
+  const log=$('log'),status=$('status');
+  function add(role,text){
+    const d=document.createElement('div');d.className='msg '+(role==='f'?'f':'u');
+    if(role==='f'){const p=document.createElement('span');p.className='para';p.textContent='¶ '+(log.querySelectorAll('.msg.f').length+1);d.appendChild(p);}
+    const t=document.createElement('span');t.textContent=text;d.appendChild(t);
+    log.appendChild(d);log.scrollTop=log.scrollHeight;return t;
+  }
+  add('f','歡迎來到皇家研究院的實驗室。我是法拉第。我一生最相信的一件事，是「去做實驗，看看大自然怎麼回答」。\n\n你有什麼想問的？可以從下面的問題開始，也可以直接問我電學、磁學，或是我那個年代的故事。');
+
+  const chips=$('chips');
+  STARTERS.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.textContent=s;b.onclick=()=>ask(s,i);chips.appendChild(b);});
+
+  function setMode(m){mode=m;$('m-inquiry').setAttribute('aria-pressed',m==='inquiry');$('m-story').setAttribute('aria-pressed',m==='story');}
+  $('m-inquiry').onclick=()=>setMode('inquiry');$('m-story').onclick=()=>setMode('story');
+
+  async function ask(text,starterIdx){
+    text=(text||'').trim();if(!text||busy)return;
+    busy=true;$('send').disabled=true;
+    add('u',text);history.push({role:'user',content:text});
+    const out=add('f','（法拉第正在思考…）');out.parentNode.classList.add('thinking');
+    let reply='';
+    if(sample){
+      try{
+        const msgs=[{role:'user',content:PERSONA.replace('{MODE}',MODES[mode])+'\n\n請以法拉第的身分開始上課。'},{role:'assistant',content:'好的，我是法拉第，準備好了。'}].concat(history.slice(-12));
+        const r=await sample(msgs,{cache:false,onText:({text})=>{out.parentNode.classList.remove('thinking');out.textContent=text;log.scrollTop=log.scrollHeight;}});
+        reply=r.text;
+      }catch(e){
+        if(e&&e.code==='not_granted'){sample=null;setStatus(false);}
+        reply=(e&&e.code==='rate_limited')?'我的蠟燭需要歇一會兒，請稍候片刻再問我。':(starterIdx!=null?OFFLINE[starterIdx]:'抱歉，實驗室的線路剛剛中斷了，請再問一次。');
+      }
+    }else{
+      reply=starterIdx!=null?OFFLINE[starterIdx]:'目前沒有連上 AI，我只能回答下方預設的問題。請允許此頁使用 Claude，就能自由提問。';
+    }
+    out.parentNode.classList.remove('thinking');out.textContent=reply;
+    history.push({role:'assistant',content:reply});
+    busy=false;$('send').disabled=false;log.scrollTop=log.scrollHeight;
+  }
+  function setStatus(on){status.className='status'+(on?' on':'');status.lastChild.textContent=on?'在實驗室裡（AI 已連線）':'離線示範模式';}
+
+  $('ask').addEventListener('submit',e=>{e.preventDefault();const v=$('q').value;$('q').value='';ask(v,null);});
+  $('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('ask').requestSubmit();}});
+
+  setStatus(false);status.lastChild.textContent='連線中…';
+  if(window.claude&&claude.use){claude.use('sample').then(s=>{sample=s;setStatus(!!s);}).catch(()=>setStatus(false));}
+  else setStatus(false);
+})();
+</script>
+</body></html>
